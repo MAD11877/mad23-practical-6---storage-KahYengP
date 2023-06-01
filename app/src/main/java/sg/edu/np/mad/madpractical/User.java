@@ -7,9 +7,14 @@ public class User {
     private String userName;
     private String description;
 
-    public User(String userName, String description) {
+    private int id;
+    private boolean followed;
+
+    public User(String userName, String description, int id, boolean followed) {
         this.userName = userName;
         this.description = description;
+        this.id = id;
+        this.followed = followed;
     }
 
 
@@ -29,5 +34,12 @@ public class User {
         this.userName = userName;
     }
 
+    public int getId(){return id;}
+    public void setId(int id){this.id = id;}
+
+    public boolean getFollowed(){return followed;}
+    public void setFollowed(boolean followed){
+        this.followed = followed;
+    }
 
 }
