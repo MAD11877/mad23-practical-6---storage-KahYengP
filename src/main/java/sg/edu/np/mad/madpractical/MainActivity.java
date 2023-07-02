@@ -2,28 +2,28 @@ package sg.edu.np.mad.madpractical;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.Random;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
 public class MainActivity extends AppCompatActivity {
-    private boolean following = false;
     private Button followButton;
     private Button messageButton;
 
     private TextView username;
     private TextView description;
 
+    private MyDBHandler dbHandler;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        dbHandler = new MyDBHandler(this, null, null, 1);
 
         username = findViewById(R.id.usernameTxt);
         description = findViewById(R.id.descriptionTxt);
@@ -31,25 +31,30 @@ public class MainActivity extends AppCompatActivity {
         followButton = findViewById(R.id.follow_button);
 
         Intent receivingEnd = getIntent();
-        String username = receivingEnd.getStringExtra("USERNAME");
-        String description = receivingEnd.getStringExtra("DESCRIPTION");
+        User userData = (User) receivingEnd.getSerializableExtra("USER_DATA");
 
-        this.username.setText(username);
-        this.description.setText(description);
+        this.username.setText(userData.getUserName());
+        this.description.setText(userData.getDescription());
+
+        if(userData.isFollowed()) {
+            followButton.setText("Unfollow");
+        } else {
+            followButton.setText("follow");
+        }
 
         followButton.setOnClickListener(view -> {
-            if(!following){
-                followButton.setText("Unfollow");
+            if(userData.isFollowed()){
+                userData.setFollowed(false);
+                dbHandler.updateUser(userData);
                 Toast.makeText(getApplicationContext(), "Follow", Toast.LENGTH_SHORT).show();
-
             }
             else {
-                followButton.setText("follow");
+                userData.setFollowed(true);
+                dbHandler.updateUser(userData);
                 Toast.makeText(getApplicationContext(), "Unfollow", Toast.LENGTH_SHORT).show();
             }
-
-            following = !following;
-
+            finish();
+            startActivity(getIntent());
         });
 
         messageButton.setOnClickListener(view -> {

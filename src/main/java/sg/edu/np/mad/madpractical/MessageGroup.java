@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.widget.Button;
 public class MessageGroup extends AppCompatActivity {
 
-    private FragmentManager fragmentManager = getSupportFragmentManager();
+    private final FragmentManager fragmentManager = getSupportFragmentManager();
     private Button group1;
     private Button group2;
 

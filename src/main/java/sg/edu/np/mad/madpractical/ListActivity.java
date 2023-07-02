@@ -5,38 +5,25 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-
+import java.util.List;
 import java.util.Random;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+
 public class ListActivity extends AppCompatActivity {
+    private MyDBHandler dbHandler;
+    ArrayList<String> name, description, id, followed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
-        ArrayList<User> users = new ArrayList<>();
+        dbHandler = new MyDBHandler(this, null, null, 1);
 
-        for (int i = 0; i < 21; i++) {
-            Random r = new Random();
-            int randomUsername = r.nextInt(1000000000);
-            int randomDescription =  r.nextInt(1000000000);
-            users.add(new User("Name-" + randomUsername , "Description-" + randomDescription));
-//            users.add(new User("Name-" + i , "Description-" + i));
-
-        }
+        List<User> users = dbHandler.getUsers();
 
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
